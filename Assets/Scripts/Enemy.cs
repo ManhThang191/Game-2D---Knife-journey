@@ -2,30 +2,46 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public Rigidbody2D rb;
+    public Animator animator;
+    
     public bool facingLeft = true;
+    public bool inRange = false;
+    
+    public float maxHealth = 3;
     public float moveSpeed = 2f;
-    public Transform checkPoint;
-    public Transform checkPointLeftRight;
     public float distance = 1f;
     public float distanceLeftRight = 1f;
-    public LayerMask layerMask;
-    public Animator animator;
-    public bool inRange = false;
-    public Transform player;
     public float attackRange = 10f;
     public float retrieveDistance = 2.5f;
     public float chaseSpeed = 4f;
+    public float attackRadius;
+    public float damage = 3f;
+
+    public Transform checkPoint;
+    public Transform checkPointLeftRight;
+    public Transform player;
+    public Transform attackPoint;
+
+    public LayerMask attackLayer;
+    public LayerMask layerMask;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        rb = this.GetComponent<Rigidbody2D>();
+        animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move();
+        Move();
+        
+    }
+
+    private void Move()
+    {
         if(Vector2.Distance(transform.position, player.position) <= attackRange )
         {
             inRange = true;
@@ -55,41 +71,60 @@ public class Enemy : MonoBehaviour
             else
             {
                 animator.SetBool("Attack1", true);
-                
             }
         }
         else
         {
             animator.SetBool("Attack1", false);
-            Move();
+            transform.Translate(Vector2.left * Time.deltaTime * moveSpeed);
+
+            RaycastHit2D hit = Physics2D.Raycast(checkPoint.position, Vector2.down, distance, layerMask);
+            RaycastHit2D hitRight = Physics2D.Raycast(checkPointLeftRight.position, Vector2.right, distanceLeftRight, layerMask);
+            RaycastHit2D hitLeft = Physics2D.Raycast(checkPointLeftRight.position, Vector2.left, distanceLeftRight, layerMask);
+
+            if(hit)
+            {
+                animator.SetBool("isWalk",true);    
+            }
+            if ( facingLeft && (!hit || hitLeft)  )
+            {
+                FlipToRight();  
+            }
+            else if (!facingLeft && (!hit || hitRight ) )
+            {
+                FlipToLeft();
+            }
         }
+        
     }
 
-    private void Move()
+    public void Attack()
     {
-        transform.Translate(Vector2.left * Time.deltaTime * moveSpeed);
+        Collider2D collInfor = Physics2D.OverlapCircle(attackPoint.position,attackRadius, attackLayer);
 
-        RaycastHit2D hit = Physics2D.Raycast(checkPoint.position, Vector2.down, distance, layerMask);
-        RaycastHit2D hitRight = Physics2D.Raycast(checkPointLeftRight.position, Vector2.right, distanceLeftRight, layerMask);
-        RaycastHit2D hitLeft = Physics2D.Raycast(checkPointLeftRight.position, Vector2.left, distanceLeftRight, layerMask);
-
-        if(hit)
+        if (collInfor)
         {
-        animator.SetBool("isWalk",true);
-            
+            Debug.Log(collInfor.transform.name);
+            if(collInfor.gameObject.GetComponent<Player>() != null)
+            {
+                collInfor.gameObject.GetComponent<Player>().TakeDamage(damage);
+            }
         }
-        if ( facingLeft && (!hit || hitLeft)  )
+        
+    }
+    public void TakeDamage(float damage)
+    {
+        if(maxHealth <= 0)
         {
-            FlipToRight();
-            
+            return;
         }
-        else if (!facingLeft && (!hit || hitRight ) )
-        {
-            FlipToLeft();
-            
-        }
+        maxHealth -= damage;
     }
 
+    public void Died()
+    {
+        Debug.Log("Enemy Died!!");
+    }
     private void FlipToRight()
     {
         transform.eulerAngles = new Vector3(0,-180,0);
@@ -117,14 +152,17 @@ public class Enemy : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange );
+
+        if(attackPoint == null) return;
+        Gizmos.color = Color.orange;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
       if(collision.gameObject.tag == "Player")
         {
             animator.SetTrigger("isAttack1");
-            animator.SetTrigger("isHurt");
-
+            
         }  
     }
 }

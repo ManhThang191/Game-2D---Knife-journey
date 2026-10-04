@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public float maxHealth = 10;
     private float movement;
     public Rigidbody2D rb;
     [SerializeField] public float moveSpeed = 5f;
@@ -13,11 +14,21 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        rb = this.GetComponent<Rigidbody2D>();
+        animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        if(maxHealth <= 0)
+        {
+            Died();
+        }
+        Move();
+    }
+
+    private void Move()
     {
         movement = Input.GetAxisRaw("Horizontal");
 
@@ -56,7 +67,19 @@ public class Player : MonoBehaviour
             
         }
     }
+    public void TakeDamage(float damage)
+    {
+        if(maxHealth <= 0)
+        {
+            return;
+        }
+        maxHealth -= damage;
+    }
 
+    public void Died()
+    {
+        Debug.Log("Player Died!!");
+    }
     private void FixedUpdate()
     {
         transform.position += new Vector3(movement,0f,0f) * Time.fixedDeltaTime * moveSpeed;
