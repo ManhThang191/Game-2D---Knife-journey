@@ -1,15 +1,27 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Player : MonoBehaviour
 {
+    public Text healthText;
+    
     public float maxHealth = 10;
     private float movement;
-    public Rigidbody2D rb;
-    [SerializeField] public float moveSpeed = 5f;
     public float jumpHeight = 1f;
+    public float damage;
+    
+    [SerializeField] public float moveSpeed = 5f;
+    public Rigidbody2D rb;
+
+    public Animator animator;
+    
     private bool isFacingRight =true;
     private bool isGround = true;
-    public Animator animator;
+
+    public Transform attackPoint;
+    public float attackRadius = 1f;
+    public LayerMask attackLayer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,9 +37,27 @@ public class Player : MonoBehaviour
         {
             Died();
         }
+        healthText.text = maxHealth.ToString();
         Move();
     }
 
+    public void Attack()
+    {
+
+        Collider2D colliInfor =  Physics2D.OverlapCircle(attackPoint.position, attackRadius, attackLayer);
+        if (colliInfor)
+        {
+            Enemy enemy = colliInfor.gameObject.GetComponent<Enemy>();
+
+            // Debug.Log(collInfor.transform.name);
+            if(colliInfor.gameObject.GetComponent<Enemy>() != null)
+            {
+                enemy.TakeDamage(damage);
+                Animator enemyAnimator = enemy.GetComponent<Animator>();
+                enemyAnimator.SetTrigger("EnemyHurt");
+            }
+        }
+    }
     private void Move()
     {
         movement = Input.GetAxisRaw("Horizontal");
@@ -99,5 +129,13 @@ public class Player : MonoBehaviour
             animator.SetBool("isJump", false);
 
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if(attackPoint == null) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPoint.position,attackRadius);
+
     }
 }

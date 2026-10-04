@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -8,7 +9,7 @@ public class Enemy : MonoBehaviour
     public bool facingLeft = true;
     public bool inRange = false;
     
-    public float maxHealth = 3;
+    public float maxHealth = 10;
     public float moveSpeed = 2f;
     public float distance = 1f;
     public float distanceLeftRight = 1f;
@@ -17,6 +18,7 @@ public class Enemy : MonoBehaviour
     public float chaseSpeed = 4f;
     public float attackRadius;
     public float damage = 3f;
+
 
     public Transform checkPoint;
     public Transform checkPointLeftRight;
@@ -104,10 +106,14 @@ public class Enemy : MonoBehaviour
 
         if (collInfor)
         {
-            Debug.Log(collInfor.transform.name);
+            Player player = collInfor.gameObject.GetComponent<Player>();
+            // Debug.Log(collInfor.transform.name);
             if(collInfor.gameObject.GetComponent<Player>() != null)
             {
-                collInfor.gameObject.GetComponent<Player>().TakeDamage(damage);
+                
+                player.TakeDamage(damage);
+                Animator playerAnimator = player.GetComponent<Animator>();
+                playerAnimator.SetTrigger("PlayerHurt");
             }
         }
         
@@ -116,14 +122,22 @@ public class Enemy : MonoBehaviour
     {
         if(maxHealth <= 0)
         {
-            return;
+            Died();
         }
         maxHealth -= damage;
     }
 
     public void Died()
     {
-        Debug.Log("Enemy Died!!");
+        GetComponent<Collider2D>().enabled = false;
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
+        animator.SetBool("Died", true);
+    }
+    public void DestroyEnemy()
+    {
+        Destroy(this.gameObject);
     }
     private void FlipToRight()
     {
@@ -165,4 +179,5 @@ public class Enemy : MonoBehaviour
             
         }  
     }
+
 }
