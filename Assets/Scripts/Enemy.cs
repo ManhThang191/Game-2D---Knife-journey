@@ -24,9 +24,12 @@ public class Enemy : MonoBehaviour
     public Transform checkPointLeftRight;
     public Transform player;
     public Transform attackPoint;
+    public Transform pointSpawnCoin;
 
     public LayerMask attackLayer;
     public LayerMask layerMask;
+
+    public GameObject coinPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -127,6 +130,11 @@ public class Enemy : MonoBehaviour
         maxHealth -= damage;
     }
 
+
+    public void SpawnCoinAfterDied()
+    {
+        Instantiate(coinPrefab, pointSpawnCoin.position, Quaternion.identity);
+    }
     public void Died()
     {
         GetComponent<Collider2D>().enabled = false;
@@ -134,6 +142,7 @@ public class Enemy : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
 
         animator.SetBool("Died", true);
+        // SpawnCoinAfterDied();
     }
     public void DestroyEnemy()
     {

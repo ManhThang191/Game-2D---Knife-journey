@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public Text healthText;
-    
+    public Text coinText;
+
+    private float coin;
     public float maxHealth = 10;
     private float movement;
     public float jumpHeight = 1f;
@@ -109,6 +111,8 @@ public class Player : MonoBehaviour
     public void Died()
     {
         Debug.Log("Player Died!!");
+        FindAnyObjectByType<GameManager>().isGameActive = false;
+        Destroy(this.gameObject);
     }
     private void FixedUpdate()
     {
@@ -128,6 +132,18 @@ public class Player : MonoBehaviour
             isGround = true;
             animator.SetBool("isJump", false);
 
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Coin"))
+        {
+            coin += 10;
+            collision.transform.GetChild(0).GetComponent<Animator>().SetTrigger("CollectCoin");
+
+            Debug.Log("Coin!");
+            
         }
     }
 
