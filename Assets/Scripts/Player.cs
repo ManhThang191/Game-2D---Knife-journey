@@ -9,6 +9,13 @@ public class Player : MonoBehaviour
     public Text maxHPText;
     [SerializeField] private Image hpFill;
 
+    [SerializeField] private Image delayedHpFill;
+
+    [SerializeField] private float damageDelay = 0.5f;
+    [SerializeField] private float drainSpeed = 0.5f;
+
+    private float delayedHP;
+
     private float coin;
     public float maxHealth = 10;
     public float currentHP;
@@ -35,6 +42,7 @@ public class Player : MonoBehaviour
         animator = this.GetComponent<Animator>();
         maxHPText.text = maxHealth.ToString();
         currentHP = maxHealth;
+        delayedHP = maxHealth;
         UpdateHPBar();
     }
 
@@ -50,6 +58,7 @@ public class Player : MonoBehaviour
 
         Move();
         UpdateHPBar();
+        UpdateDelayedHPBar();
     }
 
     public void Attack()
@@ -114,15 +123,42 @@ public class Player : MonoBehaviour
         {
             return;
         }
+
         currentHP -= damage;
         currentHP = Mathf.Clamp(currentHP, 0f, maxHealth);
+
+
         UpdateHPBar();
+        UpdateDelayedHPBar();
+
+        if (currentHP <= 0)
+        {
+            Died();
+        }
     }
 
     private void UpdateHPBar()
     {
         hpFill.fillAmount = currentHP / maxHealth;
+        if(currentHP <= (maxHealth / 100 * 30))
+        {
+            hpFill.color = Color.red;
+        }
     }
+
+    private void UpdateDelayedHPBar()
+    {
+        if (delayedHpFill == null || maxHealth <= 0) return;
+
+        float targetHP = currentHP / maxHealth;
+
+        delayedHpFill.fillAmount = Mathf.MoveTowards(
+            delayedHpFill.fillAmount,
+            targetHP,
+            drainSpeed * Time.deltaTime
+        );
+    }
+
     public void Died()
     {
         Debug.Log("Player Died!!");

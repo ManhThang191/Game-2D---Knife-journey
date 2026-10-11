@@ -358,7 +358,7 @@ MonoBehaviour:
   retrieveDistance: 2.5
   chaseSpeed: 4
   attackRadius: 1.7
-  damage: 3.28
+  damage: 5
   checkPoint: {fileID: 5712726780487555105}
   checkPointLeftRight: {fileID: 3646863680044008979}
   player: {fileID: 73275492305663026, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
