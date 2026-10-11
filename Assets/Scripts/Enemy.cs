@@ -1,13 +1,19 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private Image HpFill;
+    
+    private float currentHP;
     public Rigidbody2D rb;
     public Animator animator;
     
     public bool facingLeft = true;
     public bool inRange = false;
+    private bool isDead = false;
     
     public float maxHealth = 10;
     public float moveSpeed = 2f;
@@ -34,15 +40,20 @@ public class Enemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        isDead = false;
         rb = this.GetComponent<Rigidbody2D>();
         animator = this.GetComponent<Animator>();
+
+        currentHP = maxHealth;
+        UpdateHPBar();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
         
+        Move(); 
+        // UpdateHPBar();
     }
 
     private void Move()
@@ -105,6 +116,7 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
+        
         Collider2D collInfor = Physics2D.OverlapCircle(attackPoint.position,attackRadius, attackLayer);
 
         if (collInfor)
@@ -123,20 +135,45 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        if(maxHealth <= 0)
+         if (isDead)
+        {
+            return;
+        }
+
+        currentHP -= damage;
+        currentHP = Mathf.Clamp(currentHP, 0f, maxHealth);
+
+        UpdateHPBar();
+
+        if (currentHP <= 0f)
         {
             Died();
         }
-        maxHealth -= damage;
+    }
+
+    
+    private void UpdateHPBar()
+    {
+        if (HpFill == null)
+        {
+            return;
+        }
+
+        HpFill.fillAmount = maxHealth > 0f
+            ? currentHP / maxHealth
+            : 0f;
     }
 
 
     public void SpawnCoinAfterDied()
     {
+        Debug.Log("spawn coin");
         Instantiate(coinPrefab, pointSpawnCoin.position, Quaternion.identity);
     }
     public void Died()
     {
+        isDead = true;
+
         GetComponent<Collider2D>().enabled = false;
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;

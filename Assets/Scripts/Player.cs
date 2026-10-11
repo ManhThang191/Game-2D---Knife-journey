@@ -4,11 +4,14 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public Text healthText;
+    public Text currentHPText;
     public Text coinText;
+    public Text maxHPText;
+    [SerializeField] private Image hpFill;
 
     private float coin;
     public float maxHealth = 10;
+    public float currentHP;
     private float movement;
     public float jumpHeight = 1f;
     public float damage;
@@ -30,17 +33,23 @@ public class Player : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         animator = this.GetComponent<Animator>();
+        maxHPText.text = maxHealth.ToString();
+        currentHP = maxHealth;
+        UpdateHPBar();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(maxHealth <= 0)
+        if(currentHP <= 0)
         {
             Died();
         }
-        healthText.text = maxHealth.ToString();
+        // healthText.text = maxHealth.ToString();
+        currentHPText.text = currentHP.ToString();
+
         Move();
+        UpdateHPBar();
     }
 
     public void Attack()
@@ -101,13 +110,19 @@ public class Player : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        if(maxHealth <= 0)
+        if(currentHP <= 0)
         {
             return;
         }
-        maxHealth -= damage;
+        currentHP -= damage;
+        currentHP = Mathf.Clamp(currentHP, 0f, maxHealth);
+        UpdateHPBar();
     }
 
+    private void UpdateHPBar()
+    {
+        hpFill.fillAmount = currentHP / maxHealth;
+    }
     public void Died()
     {
         Debug.Log("Player Died!!");
@@ -133,6 +148,11 @@ public class Player : MonoBehaviour
             animator.SetBool("isJump", false);
 
         }
+
+        if(collision.gameObject.tag == "VictoryPoint")
+        {
+            
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -140,9 +160,11 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Coin"))
         {
             coin += 10;
+            coinText.text = coin.ToString();
             collision.transform.GetChild(0).GetComponent<Animator>().SetTrigger("CollectCoin");
 
-            Debug.Log("Coin!");
+            // Debug.Log("Coin!");
+            Destroy(collision.gameObject,2f);
             
         }
     }
