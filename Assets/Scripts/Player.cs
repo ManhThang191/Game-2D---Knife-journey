@@ -151,12 +151,13 @@ public class Player : MonoBehaviour
 
         if(collision.gameObject.tag == "VictoryPoint")
         {
-            
+            FindAnyObjectByType<ScenceManagement>().LoadLevel();
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        // Debug.Log("Trigger với: " + collision.name);
         if (collision.CompareTag("Coin"))
         {
             coin += 10;
