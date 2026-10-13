@@ -683,6 +683,7 @@ MonoBehaviour:
   delayedHpFill: {fileID: 8191253236430678196}
   damageDelay: 0.5
   drainSpeed: 0.5
+  DamePopupPrefabs: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
   maxHealth: 30
   currentHP: 0
   jumpHeight: 12

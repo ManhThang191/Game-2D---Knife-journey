@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private Image HpFill;
-    
+    [SerializeField] private DamePopup GameManagerDamePopup;
     private float currentHP;
     public Rigidbody2D rb;
     public Animator animator;
@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour
     public float attackRadius;
     public float damage = 3f;
 
+
+    [SerializeField] private Color colorDamePopup;
 
     public Transform checkPoint;
     public Transform checkPointLeftRight;
@@ -125,11 +127,19 @@ public class Enemy : MonoBehaviour
         if (collInfor)
         {
             Player player = collInfor.gameObject.GetComponent<Player>();
-            // Debug.Log(collInfor.transform.name);
+            if(player == null)
+            {
+                Debug.Log("Player Null");
+                return;
+            }
+
             if(collInfor.gameObject.GetComponent<Player>() != null)
             {
                 
                 player.TakeDamage(damage);
+
+                GameManagerDamePopup.ShowDamage(damage,player.transform,colorDamePopup);
+
                 Animator playerAnimator = player.GetComponent<Animator>();
                 playerAnimator.SetTrigger("PlayerHurt");
             }
@@ -178,7 +188,7 @@ public class Enemy : MonoBehaviour
         isDead = true;
 
         GetComponent<Collider2D>().enabled = false;
-        rb.linearVelocity = Vector2.zero;
+    
         rb.bodyType = RigidbodyType2D.Kinematic;
 
         animator.SetBool("Died", true);

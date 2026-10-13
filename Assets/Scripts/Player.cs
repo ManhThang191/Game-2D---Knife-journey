@@ -10,11 +10,11 @@ public class Player : MonoBehaviour
     [SerializeField] private Image hpFill;
 
     [SerializeField] private Image delayedHpFill;
+    [SerializeField] private DamePopup GameManagerDamePopup;
 
     [SerializeField] private float damageDelay = 0.5f;
     [SerializeField] private float drainSpeed = 0.5f;
-
-    [SerializeField] private GameObject DamePopupPrefabs;
+    [SerializeField] private Color colorDamepopup;
 
     private float delayedHP;
 
@@ -37,14 +37,18 @@ public class Player : MonoBehaviour
     public float attackRadius = 1f;
     public LayerMask attackLayer;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
         animator = this.GetComponent<Animator>();
+
         maxHPText.text = maxHealth.ToString();
+
         currentHP = maxHealth;
         delayedHP = maxHealth;
+
         UpdateHPBar();
     }
 
@@ -72,21 +76,16 @@ public class Player : MonoBehaviour
             Enemy enemy = colliInfor.gameObject.GetComponent<Enemy>();
             if (enemy == null) return;
 
-             Vector3 popupPosition = enemy.transform.position + new Vector3(0f, 1f, 0f);
+            // Vector3 popupPosition = enemy.transform.position + new Vector3(0f, 1f, 0f);
             
             if(colliInfor.gameObject.GetComponent<Enemy>() != null)
             {
-                GameObject popup = Instantiate( DamePopupPrefabs,popupPosition,Quaternion.identity);
+                GameManagerDamePopup.ShowDamage(damage, enemy.transform, colorDamepopup);
                 
-                Text popupText = popup.GetComponentInChildren<Text>();
-                
-                if (popupText != null)
-                {
-                    popupText.text = damage.ToString("0");
-                }
-
                 enemy.TakeDamage(damage);
+
                 Animator enemyAnimator = enemy.GetComponent<Animator>();
+
                 enemyAnimator.SetTrigger("EnemyHurt");
             }
         }
@@ -175,6 +174,8 @@ public class Player : MonoBehaviour
     public void Died()
     {
         Debug.Log("Player Died!!");
+        GetComponent<Collider2D>().enabled = false;
+        rb.bodyType = RigidbodyType2D.Kinematic;
         FindAnyObjectByType<GameManager>().isGameActive = false;
         Destroy(this.gameObject);
     }
