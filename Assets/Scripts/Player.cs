@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float damageDelay = 0.5f;
     [SerializeField] private float drainSpeed = 0.5f;
 
+    [SerializeField] private GameObject DamePopupPrefabs;
+
     private float delayedHP;
 
     private float coin;
@@ -68,10 +70,21 @@ public class Player : MonoBehaviour
         if (colliInfor)
         {
             Enemy enemy = colliInfor.gameObject.GetComponent<Enemy>();
+            if (enemy == null) return;
 
-            // Debug.Log(collInfor.transform.name);
+             Vector3 popupPosition = enemy.transform.position + new Vector3(0f, 1f, 0f);
+            
             if(colliInfor.gameObject.GetComponent<Enemy>() != null)
             {
+                GameObject popup = Instantiate( DamePopupPrefabs,popupPosition,Quaternion.identity);
+                
+                Text popupText = popup.GetComponentInChildren<Text>();
+                
+                if (popupText != null)
+                {
+                    popupText.text = damage.ToString("0");
+                }
+
                 enemy.TakeDamage(damage);
                 Animator enemyAnimator = enemy.GetComponent<Animator>();
                 enemyAnimator.SetTrigger("EnemyHurt");
