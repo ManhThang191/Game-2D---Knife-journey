@@ -172,25 +172,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1346991702}
     - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-      propertyPath: damePopup
+      propertyPath: GameManager
       value: 
+      objectReference: {fileID: 2076545093}
+    - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
+      propertyPath: colorDamepopup.b
+      value: 0.2655536
       objectReference: {fileID: 0}
     - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-      propertyPath: damagePopup
-      value: 
-      objectReference: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+      propertyPath: colorDamepopup.g
+      value: 0.43199742
+      objectReference: {fileID: 0}
     - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-      propertyPath: damagePopupP
-      value: 
-      objectReference: {fileID: 1405961916}
+      propertyPath: colorDamepopup.r
+      value: 0.93207544
+      objectReference: {fileID: 0}
     - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-      propertyPath: damagePopupText
+      propertyPath: GameManagerDamePopup
       value: 
-      objectReference: {fileID: 1405961916}
-    - target: {fileID: 3400667595556110878, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-      propertyPath: damagePopupPrefab
-      value: 
-      objectReference: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+      objectReference: {fileID: 2076545093}
     - target: {fileID: 5062585845891936858, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
       propertyPath: m_Name
       value: Player
@@ -340,6 +340,22 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 20954614}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: GameManagerDamePopup
+      value: 
+      objectReference: {fileID: 2076545093}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1123,17 +1139,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 0
---- !u!114 &1405961916 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4046932396938735080, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-  m_PrefabInstance: {fileID: 5001660557843443066}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
 --- !u!1 &1476585018
 GameObject:
   m_ObjectHideFlags: 0
@@ -7149,6 +7154,22 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 20954614}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.b
+      value: 0.99433964
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.g
+      value: 0.99433964
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: colorDamePopup.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495879345896645776, guid: 28916447f024206418cf883d0e6f97e1, type: 3}
+      propertyPath: GameManagerDamePopup
+      value: 
+      objectReference: {fileID: 2076545093}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -78361,6 +78382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2076545092}
   - component: {fileID: 2076545091}
+  - component: {fileID: 2076545093}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -78396,6 +78418,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2076545093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076545090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff18ab76ea391e4abbdc39c11e4c153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamePopup
+  damagePopupPrefab: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
 --- !u!1001 &3725769044935952974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78538,103 +78573,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ae7c2d94a7b1ae428cb01a131b1c5e7, type: 3}
---- !u!1001 &5001660557843443066
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1920
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 1080
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -26
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 6.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1309207151166357301, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-      propertyPath: m_Name
-      value: Dame Popup
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -78649,7 +78587,6 @@ SceneRoots:
   - {fileID: 15931655}
   - {fileID: 193310396}
   - {fileID: 3725769044935952974}
-  - {fileID: 5001660557843443066}
   - {fileID: 46472677}
   - {fileID: 808023089}
   - {fileID: 1519023416}

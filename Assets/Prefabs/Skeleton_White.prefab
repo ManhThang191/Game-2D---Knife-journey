@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 5586449031201982308}
   - component: {fileID: 2568001888785928668}
   - component: {fileID: 6810208107239551266}
-  - component: {fileID: 4495879345896645776}
+  - component: {fileID: 3080125241884800649}
   m_Layer: 8
   m_Name: Skeleton_White
   m_TagString: Enemy
@@ -333,7 +333,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4495879345896645776
+--- !u!114 &3080125241884800649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -342,35 +342,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 3602664745314919170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 169330ac7ea104e49a969a55a82198a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 070dec3ffc45e8e44a7ce4eab3923906, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  HpFill: {fileID: 3115233233645790570}
+  m_EditorClassIdentifier: Assembly-CSharp::SkeletonWhiteEnemy
   rb: {fileID: 2568001888785928668}
   animator: {fileID: 6810208107239551266}
-  facingLeft: 1
-  inRange: 0
-  maxHealth: 20
+  hpFill: {fileID: 3115233233645790570}
+  maxHealth: 10
   moveSpeed: 2
-  distance: 0.59
-  distanceLeftRight: 1.7
-  attackRange: 7
-  retrieveDistance: 2.5
   chaseSpeed: 4
-  attackRadius: 1.7
-  damage: 5
-  checkPoint: {fileID: 5712726780487555105}
-  checkPointLeftRight: {fileID: 3646863680044008979}
-  player: {fileID: 73275492305663026, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
+  attackRange: 5.66
+  retrieveDistance: 2.5
+  distance: 0.56
+  distanceLeftRight: 1
+  damage: 3
+  attackRadius: 1.36
   attackPoint: {fileID: 1373587052341368521}
-  pointSpawnCoin: {fileID: 6325265524150356756}
   attackLayer:
     serializedVersion: 2
     m_Bits: 128
+  checkPoint: {fileID: 5712726780487555105}
+  checkPointLeftRight: {fileID: 3646863680044008979}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+  player: {fileID: 73275492305663026, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
+  damagePopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  damagePopupColor: {r: 1, g: 1, b: 1, a: 1}
   coinPrefab: {fileID: 1600784228862367284, guid: 4ae7c2d94a7b1ae428cb01a131b1c5e7, type: 3}
+  pointSpawnCoin: {fileID: 6325265524150356756}
 --- !u!1 &5132563729574801345
 GameObject:
   m_ObjectHideFlags: 0

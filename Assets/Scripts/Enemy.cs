@@ -1,242 +1,329 @@
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.UI;
 
-
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    [SerializeField] private Image HpFill;
-    [SerializeField] private DamePopup GameManagerDamePopup;
+    [Header("Components")]
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected Animator animator;
+    [SerializeField] private Image hpFill;
+
+    [Header("Health")]
+    [SerializeField] protected float maxHealth = 10f;
     private float currentHP;
-    public Rigidbody2D rb;
-    public Animator animator;
-    
-    public bool facingLeft = true;
-    public bool inRange = false;
-    private bool isDead = false;
-    
-    public float maxHealth = 10;
-    public float moveSpeed = 2f;
-    public float distance = 1f;
-    public float distanceLeftRight = 1f;
-    public float attackRange = 10f;
-    public float retrieveDistance = 2.5f;
-    public float chaseSpeed = 4f;
-    public float attackRadius;
-    public float damage = 3f;
+    private bool isDead;
 
+    public bool IsDead => isDead;
 
-    [SerializeField] private Color colorDamePopup;
+    [Header("Movement")]
+    [SerializeField] protected float moveSpeed = 2f;
+    [SerializeField] protected float chaseSpeed = 4f;
+    [SerializeField] protected float attackRange = 10f;
+    [SerializeField] protected float retrieveDistance = 2.5f;
 
-    public Transform checkPoint;
-    public Transform checkPointLeftRight;
-    public Transform player;
-    public Transform attackPoint;
-    public Transform pointSpawnCoin;
+    [SerializeField] protected float distance = 1f;
+    [SerializeField] protected float distanceLeftRight = 1f;
 
-    public LayerMask attackLayer;
-    public LayerMask layerMask;
+    protected bool facingLeft = true;
+    protected bool inRange;
 
-    public GameObject coinPrefab;
+    [Header("Attack")]
+    [SerializeField] protected float damage = 3f;
+    [SerializeField] protected float attackRadius = 0.5f;
+    [SerializeField] protected Transform attackPoint;
+    [SerializeField] protected LayerMask attackLayer;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Detection")]
+    [SerializeField] protected Transform checkPoint;
+    [SerializeField] protected Transform checkPointLeftRight;
+    [SerializeField] protected LayerMask layerMask;
+    [SerializeField] protected Transform player;
+
+    [Header("Damage Popup")]
+    [SerializeField] private DamePopup damagePopup;
+    [SerializeField] private Color damagePopupColor = Color.white;
+
+    [Header("Drop Item")]
+    [SerializeField] protected GameObject coinPrefab;
+    [SerializeField] protected Transform pointSpawnCoin;
+
+    protected virtual void Awake()
     {
-        isDead = false;
-        rb = this.GetComponent<Rigidbody2D>();
-        animator = this.GetComponent<Animator>();
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
 
         currentHP = maxHealth;
+        isDead = false;
+
         UpdateHPBar();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (isDead)
-        {
             return;
-        }
-        Move(); 
-        // UpdateHPBar();
+
+        Move();
     }
 
-    private void Move()
+    // Hanh vi di chuyen mac dinh.
+    // Lop con co the override neu co AI rieng.
+    protected virtual void Move()
     {
-        if(Vector2.Distance(transform.position, player.position) <= attackRange )
-        {
-            inRange = true;
-        }
-        else
-        {
-            inRange = false;
-        }
+        if (player == null)
+            return;
+
+        inRange = Vector2.Distance(
+            transform.position,
+            player.position
+        ) <= attackRange;
 
         if (inRange)
         {
-            
-            if(Vector2.Distance(transform.position, player.position) > retrieveDistance)
-            {
-                if(player.position.x > transform.position.x)
-                {
-                    FlipToRight();
-                }
-                else
-                {   
-                    FlipToLeft();
-                }
-                animator.SetBool("Attack1", false);
-
-                transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
-            }
-            else
-            {
-                animator.SetBool("Attack1", true);
-            }
+            ChaseOrAttack();
         }
         else
         {
-            animator.SetBool("Attack1", false);
-            transform.Translate(Vector2.left * Time.deltaTime * moveSpeed);
+            Patrol();
+        }
+    }
 
-            RaycastHit2D hit = Physics2D.Raycast(checkPoint.position, Vector2.down, distance, layerMask);
-            RaycastHit2D hitRight = Physics2D.Raycast(checkPointLeftRight.position, Vector2.right, distanceLeftRight, layerMask);
-            RaycastHit2D hitLeft = Physics2D.Raycast(checkPointLeftRight.position, Vector2.left, distanceLeftRight, layerMask);
+    protected virtual void ChaseOrAttack()
+    {
+        float distanceToPlayer = Vector2.Distance(
+            transform.position,
+            player.position
+        );
 
-            if(hit)
-            {
-                animator.SetBool("isWalk",true);    
-            }
-            if ( facingLeft && (!hit || hitLeft)  )
-            {
-                FlipToRight();  
-            }
-            else if (!facingLeft && (!hit || hitRight ) )
-            {
+        if (distanceToPlayer > retrieveDistance)
+        {
+            if (player.position.x > transform.position.x)
+                FlipToRight();
+            else
                 FlipToLeft();
-            }
+
+            animator.SetBool("Attack1", false);
+
+            transform.position = Vector2.MoveTowards(
+                transform.position,
+                player.position,
+                chaseSpeed * Time.deltaTime
+            );
         }
-        
+        else
+        {
+            animator.SetBool("Attack1", true);
+        }
     }
 
-    public void Attack()
+    protected virtual void Patrol()
     {
-        
-        Collider2D collInfor = Physics2D.OverlapCircle(attackPoint.position,attackRadius, attackLayer);
+        animator.SetBool("Attack1", false);
 
-        if (collInfor)
-        {
-            Player player = collInfor.gameObject.GetComponent<Player>();
-            if(player == null)
-            {
-                Debug.Log("Player Null");
-                return;
-            }
+        transform.Translate(
+            Vector2.left * moveSpeed * Time.deltaTime
+        );
 
-            if(collInfor.gameObject.GetComponent<Player>() != null)
-            {
-                
-                player.TakeDamage(damage);
-
-                GameManagerDamePopup.ShowDamage(damage,player.transform,colorDamePopup);
-
-                Animator playerAnimator = player.GetComponent<Animator>();
-                playerAnimator.SetTrigger("PlayerHurt");
-            }
-        }
-        
-    }
-    public void TakeDamage(float damage)
-    {
-         if (isDead)
-        {
+        if (checkPoint == null || checkPointLeftRight == null)
             return;
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            checkPoint.position,
+            Vector2.down,
+            distance,
+            layerMask
+        );
+
+        RaycastHit2D hitRight = Physics2D.Raycast(
+            checkPointLeftRight.position,
+            Vector2.right,
+            distanceLeftRight,
+            layerMask
+        );
+
+        RaycastHit2D hitLeft = Physics2D.Raycast(
+            checkPointLeftRight.position,
+            Vector2.left,
+            distanceLeftRight,
+            layerMask
+        );
+
+        animator.SetBool("isWalk", hit);
+
+        if (facingLeft && (!hit || hitLeft))
+            FlipToRight();
+        else if (!facingLeft && (!hit || hitRight))
+            FlipToLeft();
+    }
+
+    // Duoc goi tu Animation Event cua animation tan cong.
+    public virtual void Attack()
+    {
+        if (isDead || attackPoint == null)
+            return;
+
+        Collider2D hit = Physics2D.OverlapCircle(
+            attackPoint.position,
+            attackRadius,
+            attackLayer
+        );
+
+        if (hit == null)
+            return;
+
+        Player target = hit.GetComponent<Player>();
+
+        if (target == null)
+            return;
+
+        target.TakeDamage(damage);
+
+        if (damagePopup != null)
+        {
+            damagePopup.ShowDamage(
+                damage,
+                target.transform,
+                damagePopupColor
+            );
         }
 
-        currentHP -= damage;
-        currentHP = Mathf.Clamp(currentHP, 0f, maxHealth);
+        Animator targetAnimator = target.GetComponent<Animator>();
+
+        if (targetAnimator != null)
+            targetAnimator.SetTrigger("PlayerHurt");
+    }
+
+    public virtual void TakeDamage(float amount)
+    {
+        if (isDead || amount <= 0f)
+            return;
+
+        currentHP = Mathf.Clamp(
+            currentHP - amount,
+            0f,
+            maxHealth
+        );
 
         UpdateHPBar();
 
         if (currentHP <= 0f)
-        {
             Died();
-        }
     }
 
-    
-    private void UpdateHPBar()
+    protected virtual void UpdateHPBar()
     {
-        if (HpFill == null)
-        {
+        if (hpFill == null)
             return;
-        }
 
-        HpFill.fillAmount = maxHealth > 0f
+        hpFill.fillAmount = maxHealth > 0f
             ? currentHP / maxHealth
             : 0f;
     }
 
+    public virtual void Died()
+    {
+        if (isDead)
+            return;
 
-    public void SpawnCoinAfterDied()
-    {
-        Debug.Log("spawn coin");
-        Instantiate(coinPrefab, pointSpawnCoin.position, Quaternion.identity);
-    }
-    public void Died()
-    {
         isDead = true;
 
-        GetComponent<Collider2D>().enabled = false;
-    
-        rb.bodyType = RigidbodyType2D.Kinematic;
+        Collider2D col = GetComponent<Collider2D>();
 
-        animator.SetBool("Died", true);
-        // SpawnCoinAfterDied();
+        if (col != null)
+            col.enabled = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
+
+        if (animator != null)
+            animator.SetBool("Died", true);
     }
-    public void DestroyEnemy()
+
+    // Goi tu Animation Event khi animation chet ket thuc.
+    public virtual void SpawnCoinAfterDied()
     {
-        Destroy(this.gameObject);
+        if (coinPrefab == null || pointSpawnCoin == null)
+            return;
+
+        Instantiate(
+            coinPrefab,
+            pointSpawnCoin.position,
+            Quaternion.identity
+        );
     }
-    private void FlipToRight()
+
+    // Goi tu Animation Event khi animation chet ket thuc.
+    public virtual void DestroyEnemy()
     {
-        transform.eulerAngles = new Vector3(0,-180,0);
-        facingLeft =false;
+        Destroy(gameObject);
     }
-    private void FlipToLeft()
+
+    protected void FlipToRight()
     {
-        transform.eulerAngles = new Vector3(0,0,0);
+        transform.eulerAngles = new Vector3(0f, -180f, 0f);
+        facingLeft = false;
+    }
+
+    protected void FlipToLeft()
+    {
+        transform.eulerAngles = Vector3.zero;
         facingLeft = true;
     }
-    private void OnDrawGizmosSelected()
-    {
-        if(checkPoint == null)
-        {
-            return;
-        }
-        
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(checkPoint.position, Vector2.down * distance);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(checkPointLeftRight.position, Vector2.right * distanceLeftRight);
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(checkPointLeftRight.position, Vector2.left * distanceLeftRight);
+    protected virtual void OnCollisionEnter2D(
+        Collision2D collision
+    )
+    {
+        if (isDead || !collision.gameObject.CompareTag("Player"))
+            return;
+
+        if (animator != null)
+            animator.SetTrigger("isAttack1");
+    }
+
+    protected virtual void OnDrawGizmosSelected()
+    {
+        if (checkPoint != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(
+                checkPoint.position,
+                Vector2.down * distance
+            );
+        }
+
+        if (checkPointLeftRight != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(
+                checkPointLeftRight.position,
+                Vector2.right * distanceLeftRight
+            );
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(
+                checkPointLeftRight.position,
+                Vector2.left * distanceLeftRight
+            );
+        }
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange );
+        Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        if(attackPoint == null) return;
-        Gizmos.color = Color.orange;
-        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-      if(collision.gameObject.tag == "Player")
+        if (attackPoint != null)
         {
-            animator.SetTrigger("isAttack1");
-            
-        }  
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(
+                attackPoint.position,
+                attackRadius
+            );
+        }
     }
-
 }
