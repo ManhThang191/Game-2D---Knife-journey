@@ -677,18 +677,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   currentHPText: {fileID: 5006584096127478205}
-  coinText: {fileID: 0}
   maxHPText: {fileID: 1520148960642425653}
   hpFill: {fileID: 3160773931029737633}
   delayedHpFill: {fileID: 8191253236430678196}
-  damageDelay: 0.5
-  drainSpeed: 0.5
-  DamePopupPrefabs: {fileID: 3995197539349608433, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  coinText: {fileID: 0}
   maxHealth: 30
   currentHP: 0
-  jumpHeight: 12
   damage: 5
+  damageDelay: 0.5
+  drainSpeed: 0.5
   moveSpeed: 7
+  jumpHeight: 12
   rb: {fileID: 1719693712249638396}
   animator: {fileID: 8881673345071597588}
   attackPoint: {fileID: 2060117838519755869}
@@ -696,6 +695,9 @@ MonoBehaviour:
   attackLayer:
     serializedVersion: 2
     m_Bits: 256
+  GameManagerDamePopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  damagePopupColor: {r: 1, g: 1, b: 1, a: 1}
+  coin: 0
 --- !u!95 &8881673345071597588
 Animator:
   serializedVersion: 7

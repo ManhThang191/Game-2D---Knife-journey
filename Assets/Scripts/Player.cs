@@ -4,38 +4,47 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public Text currentHPText;
-    public Text coinText;
-    public Text maxHPText;
+    [Header("UI - Health")]
+    [SerializeField] private Text currentHPText;
+    [SerializeField] private Text maxHPText;
     [SerializeField] private Image hpFill;
-
     [SerializeField] private Image delayedHpFill;
-    [SerializeField] private DamePopup GameManagerDamePopup;
 
+    [Header("UI - Coins")]
+    [SerializeField] private Text coinText;
+
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 10f;
+    [SerializeField] private float currentHP = 10f;
+    [SerializeField] private float damage;
     [SerializeField] private float damageDelay = 0.5f;
     [SerializeField] private float drainSpeed = 0.5f;
-    [SerializeField] private Color colorDamepopup;
 
     private float delayedHP;
 
-    private float coin;
-    public float maxHealth = 10;
-    public float currentHP;
-    private float movement;
-    public float jumpHeight = 1f;
-    public float damage;
-    
-    [SerializeField] public float moveSpeed = 5f;
-    public Rigidbody2D rb;
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpHeight = 1f;
 
-    public Animator animator;
-    
-    private bool isFacingRight =true;
+    private float movement;
+    private bool isFacingRight = true;
     private bool isGround = true;
 
-    public Transform attackPoint;
-    public float attackRadius = 1f;
-    public LayerMask attackLayer;
+    [Header("Physics & Animation")]
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
+
+    [Header("Attack")]
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private float attackRadius = 1f;
+    [SerializeField] private LayerMask attackLayer;
+
+    [Header("Damage Popup")]
+    [SerializeField] private DamePopup GameManagerDamePopup;
+    [SerializeField] private Color damagePopupColor = Color.white;
+
+    [Header("Currency")]
+    [SerializeField] private float coin;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -80,7 +89,7 @@ public class Player : MonoBehaviour
             
             if(colliInfor.gameObject.GetComponent<Enemy>() != null)
             {
-                GameManagerDamePopup.ShowDamage(damage, enemy.transform, colorDamepopup);
+                GameManagerDamePopup.ShowDamage(damage, enemy.transform, damagePopupColor);
                 
                 enemy.TakeDamage(damage);
 
