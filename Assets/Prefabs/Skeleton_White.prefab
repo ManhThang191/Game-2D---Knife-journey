@@ -348,14 +348,14 @@ MonoBehaviour:
   rb: {fileID: 2568001888785928668}
   animator: {fileID: 6810208107239551266}
   hpFill: {fileID: 3115233233645790570}
-  maxHealth: 10
+  maxHealth: 120
   moveSpeed: 2
   chaseSpeed: 4
   attackRange: 5.66
   retrieveDistance: 2.5
   distance: 0.56
   distanceLeftRight: 1
-  damage: 3
+  damage: 15
   attackRadius: 1.36
   attackPoint: {fileID: 1373587052341368521}
   attackLayer:

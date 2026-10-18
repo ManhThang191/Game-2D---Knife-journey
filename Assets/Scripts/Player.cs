@@ -20,12 +20,34 @@ public class Player : MonoBehaviour
     [SerializeField] private float damageDelay = 0.5f;
     [SerializeField] private float drainSpeed = 0.5f;
 
+    [Header("Stamina")]
+    [SerializeField] private float maxStamina = 10f;
+    [SerializeField] private float currentStamina;
+    [SerializeField] private float staminaDrainDelay = 0.5f;
+    [SerializeField] private float staminaDrainSpeed = 0.5f;
+
+    [Header("Stamina For Each Activity")]
+    [SerializeField] private float staminaForAttack;
+    [SerializeField] private float staminaForMove;
+    [SerializeField] private float staminaForUseSkill;
+    [SerializeField] private float moveStaminaInterval = 0.2f;
+    private float moveStaminaTimer;
+    // [SerializeField] private float staminaForAttack;
+
+    [Header("Stamina Recovery")]
+    [SerializeField] private float staminaRecoveryRate = 2f;
+    [SerializeField] private float staminaRecoveryDelay = 2f;
+    private float staminaIdleTimer;
+
+
+    [Header("UI Stamina")]
+    [SerializeField] private Image staminaFill;
+    [SerializeField] private Image delayedStaminaFill;
     private float delayedHP;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpHeight = 1f;
-
     private float movement;
     private bool isFacingRight = true;
     private bool isGround = true;
@@ -35,6 +57,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Attack")]
+    private bool isAttacking = false;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private float attackRadius = 1f;
     [SerializeField] private LayerMask attackLayer;
@@ -56,9 +79,16 @@ public class Player : MonoBehaviour
         maxHPText.text = maxHealth.ToString();
 
         currentHP = maxHealth;
-        delayedHP = maxHealth;
+        // delayedHP = maxHealth;
 
+        currentStamina = maxStamina;
+        if (delayedStaminaFill != null)
+        {
+            delayedStaminaFill.fillAmount = 1f;
+        }
+        
         UpdateHPBar();
+        UpdateStamina();
     }
 
     // Update is called once per frame
@@ -72,13 +102,22 @@ public class Player : MonoBehaviour
         currentHPText.text = currentHP.ToString();
 
         Move();
+        HandleMoveStamina();
+        animator.SetBool("isRun", movement != 0f);
+        RecoverStamina();
+
+
+
         UpdateHPBar();
         UpdateDelayedHPBar();
+
+        UpdateStamina();
+        UpdateDelayedStaminaBar();
     }
 
     public void Attack()
     {
-
+        
         Collider2D colliInfor =  Physics2D.OverlapCircle(attackPoint.position, attackRadius, attackLayer);
         if (colliInfor)
         {
@@ -89,6 +128,11 @@ public class Player : MonoBehaviour
             
             if(colliInfor.gameObject.GetComponent<Enemy>() != null)
             {
+                // if (Input.GetMouseButtonDown(0))
+                // {
+                //     animator.SetTrigger("isAttack");
+                //     // Attack();
+                // }
                 GameManagerDamePopup.ShowDamage(damage, enemy.transform, damagePopupColor);
                 
                 enemy.TakeDamage(damage);
@@ -105,17 +149,21 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (!TryUseStamina(staminaForAttack) ){
+                return;
+            }
+            isAttacking = true;
             animator.SetTrigger("isAttack");
         }
 
-        if(movement != 0)
-        {
-            animator.SetBool("isRun", true);
-        }
-        else
-        {
-            animator.SetBool("isRun", false);
-        }
+        // if(movement != 0)
+        // {
+        //     animator.SetBool("isRun", true);
+        // }
+        // else
+        // {
+        //     animator.SetBool("isRun", false);
+        // }
 
         if (movement < 0f && isFacingRight )
         {
@@ -138,6 +186,11 @@ public class Player : MonoBehaviour
             
         }
     }
+    public void EndAttack()
+    {
+        isAttacking = false;
+    }
+    
     public void TakeDamage(float damage)
     {
         if(currentHP <= 0)
@@ -160,6 +213,8 @@ public class Player : MonoBehaviour
 
     private void UpdateHPBar()
     {
+        if(hpFill == null ) return;
+
         hpFill.fillAmount = currentHP / maxHealth;
         if(currentHP <= (maxHealth / 100 * 30))
         {
@@ -167,6 +222,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    
     private void UpdateDelayedHPBar()
     {
         if (delayedHpFill == null || maxHealth <= 0) return;
@@ -180,6 +236,118 @@ public class Player : MonoBehaviour
         );
     }
 
+    private void UpdateStamina()
+    {
+        if(staminaFill == null) return;
+
+        staminaFill.fillAmount = currentStamina / maxStamina;
+        if(currentStamina <= (maxStamina / 100 * 30))
+        {
+            staminaFill.color = Color.red;
+        }
+    }
+
+    
+
+    private void UpdateDelayedStaminaBar()
+    {
+        if(delayedStaminaFill == null) return;
+        if (delayedStaminaFill == null || maxStamina <= 0) return;
+
+        float targetStamina = currentStamina / maxStamina;
+
+        delayedStaminaFill.fillAmount = Mathf.MoveTowards(
+            delayedStaminaFill.fillAmount,
+            targetStamina,
+            drainSpeed * Time.deltaTime
+        );
+    }
+
+    private bool TryUseStamina(float staminaTaken)
+    {
+        if (currentStamina < staminaTaken)
+        {
+            return false;
+        }
+
+        currentStamina -= staminaTaken;
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        UpdateStamina();
+        UpdateDelayedStaminaBar();
+
+        return true;
+    }
+
+    private void HandleMoveStamina()
+    {
+        // Không di chuyển thì không tiêu hao stamina
+        if (movement == 0f)
+        {
+            moveStaminaTimer = 0f;
+            return;
+        }
+
+        // Không đủ stamina thì dừng di chuyển
+        if (currentStamina <= 0f)
+        {
+            movement = 0f;
+            return;
+        }
+
+        moveStaminaTimer += Time.deltaTime;
+
+        if (moveStaminaTimer >= moveStaminaInterval)
+        {
+            // Kiểm tra stamina trước khi trừ
+            if (currentStamina >= staminaForMove)
+            {
+                TryUseStamina(staminaForMove);
+            }
+            else
+            {
+                // Không đủ stamina cho lần di chuyển tiếp theo
+                currentStamina = 0f;
+                movement = 0f;
+            }
+
+            moveStaminaTimer = 0f;
+        }
+    }
+
+    private void RecoverStamina()
+    {
+        // Nếu Player đang di chuyển hoac dang tan cong
+        if (movement != 0f || isAttacking)
+        {
+            staminaIdleTimer = 0f;
+            return;
+        }
+
+        // Đã đầy stamina thì không cần hồi
+        if (currentStamina >= maxStamina)
+        {
+            staminaIdleTimer = 0f;
+            return;
+        }
+
+        // Đếm thời gian đứng yên
+        staminaIdleTimer += Time.deltaTime;
+
+        // Chưa đứng yên đủ thời gian chờ
+        if (staminaIdleTimer < staminaRecoveryDelay)
+        {
+            return;
+        }
+
+        // Bắt đầu hồi stamina
+        currentStamina += staminaRecoveryRate * Time.deltaTime;
+
+        currentStamina = Mathf.Clamp(
+            currentStamina,
+            0f,
+            maxStamina
+        );
+    }
     public void Died()
     {
         Debug.Log("Player Died!!");
