@@ -767,8 +767,9 @@ MonoBehaviour:
   currentStamina: 5.05
   staminaDrainDelay: 0.5
   staminaDrainSpeed: 0.5
-  staminaForAttack: 10
-  staminaForMove: 2
+  staminaForAttack: 12
+  staminaForMove: 1.5
+  staminaForJump: 10
   staminaForUseSkill: 0
   moveStaminaInterval: 0.2
   staminaRecoveryRate: 20

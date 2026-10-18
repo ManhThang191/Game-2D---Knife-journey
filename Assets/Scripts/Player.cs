@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Text maxHPText;
     [SerializeField] private Image hpFill;
     [SerializeField] private Image delayedHpFill;
+    private Color originalHPColor; //59D937
 
     [Header("UI - Coins")]
     [SerializeField] private Text coinText;
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
     [Header("Stamina For Each Activity")]
     [SerializeField] private float staminaForAttack;
     [SerializeField] private float staminaForMove;
+    [SerializeField] private float staminaForJump;
     [SerializeField] private float staminaForUseSkill;
     [SerializeField] private float moveStaminaInterval = 0.2f;
     private float moveStaminaTimer;
@@ -43,6 +45,8 @@ public class Player : MonoBehaviour
     [Header("UI Stamina")]
     [SerializeField] private Image staminaFill;
     [SerializeField] private Image delayedStaminaFill;
+    private Color originalStaminaColor; //D7BB3C
+
     private float delayedHP;
 
     [Header("Movement")]
@@ -50,7 +54,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpHeight = 1f;
     private float movement;
     private bool isFacingRight = true;
-    private bool isGround = true;
+    private bool isGround = false;
 
     [Header("Physics & Animation")]
     [SerializeField] private Rigidbody2D rb;
@@ -77,6 +81,17 @@ public class Player : MonoBehaviour
         animator = this.GetComponent<Animator>();
 
         maxHPText.text = maxHealth.ToString();
+
+        if(hpFill != null)
+        {
+            originalHPColor = hpFill.color;
+        }
+
+        if(staminaFill != null)
+        {
+            originalStaminaColor = staminaFill.color;
+        }
+
 
         currentHP = maxHealth;
         // delayedHP = maxHealth;
@@ -143,17 +158,22 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    public void EndAttack()
+    {
+        isAttacking = false;
+    }
     private void Move()
     {
         movement = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) )
         {
-            if (!TryUseStamina(staminaForAttack) ){
-                return;
+            if (TryUseStamina(staminaForAttack))
+            {
+                isAttacking = true;
+                animator.SetTrigger("isAttack");
             }
-            isAttacking = true;
-            animator.SetTrigger("isAttack");
         }
 
         // if(movement != 0)
@@ -179,6 +199,12 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space) && isGround)
         {
+            if (!TryUseStamina(staminaForJump))
+            {
+                return;
+            }
+
+
             Jump();
             animator.SetBool("isJump", true);
 
@@ -186,10 +212,7 @@ public class Player : MonoBehaviour
             
         }
     }
-    public void EndAttack()
-    {
-        isAttacking = false;
-    }
+    
     
     public void TakeDamage(float damage)
     {
@@ -213,12 +236,23 @@ public class Player : MonoBehaviour
 
     private void UpdateHPBar()
     {
-        if(hpFill == null ) return;
+        if (hpFill == null || maxHealth <= 0f) return;
 
-        hpFill.fillAmount = currentHP / maxHealth;
-        if(currentHP <= (maxHealth / 100 * 30))
+        float hpPercent = currentHP / maxHealth;
+
+        hpFill.fillAmount = hpPercent;
+
+        if (hpPercent <= 0.1f)
         {
             hpFill.color = Color.red;
+        }
+        else if (hpPercent <= 0.4f)
+        {
+            hpFill.color = new Color(1f, 0.5f, 0f); // Cam
+        }
+        else
+        {
+            hpFill.color = originalHPColor;
         }
     }
 
@@ -244,6 +278,10 @@ public class Player : MonoBehaviour
         if(currentStamina <= (maxStamina / 100 * 30))
         {
             staminaFill.color = Color.red;
+        }
+        if(currentStamina > (maxStamina / 100 * 30))
+        {
+            staminaFill.color = originalStaminaColor;
         }
     }
 
@@ -317,7 +355,7 @@ public class Player : MonoBehaviour
     private void RecoverStamina()
     {
         // Nếu Player đang di chuyển hoac dang tan cong
-        if (movement != 0f || isAttacking)
+        if (movement != 0f || isAttacking || !isGround )
         {
             staminaIdleTimer = 0f;
             return;
