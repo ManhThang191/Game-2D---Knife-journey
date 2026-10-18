@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DamePopup : MonoBehaviour
+public class InforNumberPopup : MonoBehaviour
 {
-    public static DamePopup Instance { get; private set; }
+    public static InforNumberPopup Instance { get; private set; }
     [SerializeField] private GameObject damagePopupPrefab;
-
+    [SerializeField] private float popupLifetime = 2f;
     private void Awake()
     {
         Instance = this;
@@ -38,6 +38,8 @@ public class DamePopup : MonoBehaviour
         {
             Debug.LogWarning("Không tìm thấy TextMeshPro trong Damage Popup!");
         }
+
+        Destroy(popup, popupLifetime);
         
     }
 

@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask attackLayer;
 
     [Header("Damage Popup")]
-    [SerializeField] private DamePopup GameManagerDamePopup;
+    [SerializeField] private InforNumberPopup inforNumberPopup;
     [SerializeField] private Color damagePopupColor = Color.white;
 
     [Header("Currency")]
@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
                 //     animator.SetTrigger("isAttack");
                 //     // Attack();
                 // }
-                GameManagerDamePopup.ShowDamage(damage, enemy.transform, damagePopupColor);
+                inforNumberPopup.ShowDamage(damage, enemy.transform, damagePopupColor);
                 
                 enemy.TakeDamage(damage);
 
@@ -433,6 +433,7 @@ public class Player : MonoBehaviour
         // Debug.Log("Trigger với: " + collision.name);
         if (collision.CompareTag("Coin"))
         {
+            collision.GetComponent<Collider2D>().enabled = false;
             coin += 10;
             coinText.text = coin.ToString();
             collision.transform.GetChild(0).GetComponent<Animator>().SetTrigger("CollectCoin");

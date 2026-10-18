@@ -776,7 +776,7 @@ MonoBehaviour:
   staminaRecoveryDelay: 2
   staminaFill: {fileID: 4641679765472921048}
   delayedStaminaFill: {fileID: 589371127488684895}
-  moveSpeed: 7
+  moveSpeed: 10
   jumpHeight: 12
   rb: {fileID: 1719693712249638396}
   animator: {fileID: 8881673345071597588}
@@ -785,7 +785,7 @@ MonoBehaviour:
   attackLayer:
     serializedVersion: 2
     m_Bits: 256
-  GameManagerDamePopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  inforNumberPopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
   damagePopupColor: {r: 1, g: 1, b: 1, a: 1}
   coin: 0
 --- !u!95 &8881673345071597588

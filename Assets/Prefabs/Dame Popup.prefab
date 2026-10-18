@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   damagePopupPrefab: {fileID: 3995197539349608433}
+  popupLifetime: 1.3
 --- !u!95 &7480530571423771837
 Animator:
   serializedVersion: 7

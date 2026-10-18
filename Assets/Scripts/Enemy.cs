@@ -41,7 +41,7 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected Transform player;
 
     [Header("Damage Popup")]
-    [SerializeField] private DamePopup damagePopup;
+    [SerializeField] private InforNumberPopup inforNumberPopup;
     [SerializeField] private Color damagePopupColor = Color.white;
 
     [Header("Drop Item")]
@@ -182,9 +182,9 @@ public abstract class Enemy : MonoBehaviour
 
         target.TakeDamage(damage);
 
-        if (damagePopup != null)
+        if (inforNumberPopup != null)
         {
-            damagePopup.ShowDamage(
+            inforNumberPopup.ShowDamage(
                 damage,
                 target.transform,
                 damagePopupColor
