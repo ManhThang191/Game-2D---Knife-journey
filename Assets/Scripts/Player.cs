@@ -274,15 +274,23 @@ public class Player : MonoBehaviour
     {
         if(staminaFill == null) return;
 
-        staminaFill.fillAmount = currentStamina / maxStamina;
-        if(currentStamina <= (maxStamina / 100 * 30))
+        float staminaPercent = currentStamina / maxStamina;
+
+        staminaFill.fillAmount = staminaPercent;
+
+        if (staminaPercent <= 0.1f)
         {
             staminaFill.color = Color.red;
         }
-        if(currentStamina > (maxStamina / 100 * 30))
+        else if (staminaPercent <= 0.4f)
+        {
+            staminaFill.color = new Color(1f, 0.5f, 0f); // Cam
+        }
+        else
         {
             staminaFill.color = originalStaminaColor;
         }
+
     }
 
     
