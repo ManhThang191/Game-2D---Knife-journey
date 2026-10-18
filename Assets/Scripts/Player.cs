@@ -436,7 +436,7 @@ public class Player : MonoBehaviour
             coin += 10;
             coinText.text = coin.ToString();
             collision.transform.GetChild(0).GetComponent<Animator>().SetTrigger("CollectCoin");
-
+        
             // Debug.Log("Coin!");
             Destroy(collision.gameObject,2f);
             

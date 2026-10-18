@@ -38,6 +38,12 @@ public class DamePopup : MonoBehaviour
         {
             Debug.LogWarning("Không tìm thấy TextMeshPro trong Damage Popup!");
         }
+        
+    }
+
+    public void Destroy()
+    {
+        Destroy(this.gameObject);
     }
 
    
