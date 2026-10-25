@@ -4,6 +4,14 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [Header("Content Popup")]
+    [SerializeField] private string insufficientStaminaMessage;
+
+
+    [Header("Color Popup")]
+    [SerializeField] private Color colorStaminaWarm;
+
+
     [Header("UI - Health")]
     [SerializeField] private Text currentHPText;
     [SerializeField] private Text maxHPText;
@@ -24,8 +32,8 @@ public class Player : MonoBehaviour
     [Header("Stamina")]
     [SerializeField] private float maxStamina = 10f;
     [SerializeField] private float currentStamina;
-    // [SerializeField] private float staminaDrainDelay = 0.5f;
-    // [SerializeField] private float staminaDrainSpeed = 0.5f;
+    [SerializeField] private Transform positionInsufficientStaminaMessage;
+
 
     [Header("Stamina For Each Activity")]
     [SerializeField] private float staminaForAttack;
@@ -176,6 +184,8 @@ public class Player : MonoBehaviour
                 isAttacking = true;
                 animator.SetTrigger("isAttack");
             }
+            
+            
         }
 
         // if(movement != 0)
@@ -313,8 +323,14 @@ public class Player : MonoBehaviour
 
     private bool TryUseStamina(float staminaTaken)
     {
+        
         if (currentStamina < staminaTaken)
         {
+            PopupManagement.Instance.ShowInfo(
+                insufficientStaminaMessage,
+                positionInsufficientStaminaMessage,
+                colorStaminaWarm
+            );
             return false;
         }
 
@@ -338,6 +354,11 @@ public class Player : MonoBehaviour
         // Không đủ stamina thì dừng di chuyển
         if (currentStamina <= 0f)
         {
+            PopupManagement.Instance.ShowInfo(
+                insufficientStaminaMessage,
+                positionInsufficientStaminaMessage,
+                colorStaminaWarm
+            );
             movement = 0f;
             return;
         }
