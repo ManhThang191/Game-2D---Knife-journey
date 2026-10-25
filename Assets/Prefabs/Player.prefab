@@ -251,7 +251,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -570,6 +570,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4729191819806856049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3852521185810881082}
+  m_Layer: 0
+  m_Name: Stamina Warm Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3852521185810881082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4729191819806856049}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.02, y: 1.46, z: 0}
+  m_LocalScale: {x: 0.5103324, y: 0.5103324, z: 0.5103324}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 73275492305663026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5062585845891936858
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,6 +637,7 @@ Transform:
   m_Children:
   - {fileID: 2060117838519755869}
   - {fileID: 668926727443666088}
+  - {fileID: 3852521185810881082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4633658537277859922
@@ -785,8 +817,8 @@ MonoBehaviour:
   attackLayer:
     serializedVersion: 2
     m_Bits: 256
-  inforNumberPopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
-  damagePopupColor: {r: 1, g: 1, b: 1, a: 1}
+  inforNumberPopup: {fileID: 947664996981184095, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  damagePopupColor: {r: 0.86415094, g: 0.42229262, b: 0.42229262, a: 1}
   coin: 0
 --- !u!95 &8881673345071597588
 Animator:

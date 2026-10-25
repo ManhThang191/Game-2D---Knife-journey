@@ -18,14 +18,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxHealth = 10f;
     [SerializeField] private float currentHP = 10f;
     [SerializeField] private float damage;
-    [SerializeField] private float damageDelay = 0.5f;
+    // [SerializeField] private float damageDelay = 0.5f;
     [SerializeField] private float drainSpeed = 0.5f;
 
     [Header("Stamina")]
     [SerializeField] private float maxStamina = 10f;
     [SerializeField] private float currentStamina;
-    [SerializeField] private float staminaDrainDelay = 0.5f;
-    [SerializeField] private float staminaDrainSpeed = 0.5f;
+    // [SerializeField] private float staminaDrainDelay = 0.5f;
+    // [SerializeField] private float staminaDrainSpeed = 0.5f;
 
     [Header("Stamina For Each Activity")]
     [SerializeField] private float staminaForAttack;
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Image delayedStaminaFill;
     private Color originalStaminaColor; //D7BB3C
 
-    private float delayedHP;
+    // private float delayedHP;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
@@ -67,7 +67,8 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask attackLayer;
 
     [Header("Damage Popup")]
-    [SerializeField] private InforNumberPopup inforNumberPopup;
+    // [SerializeField] private InforNumberPopup inforNumberPopup;
+
     [SerializeField] private Color damagePopupColor = Color.white;
 
     [Header("Currency")]
@@ -148,7 +149,8 @@ public class Player : MonoBehaviour
                 //     animator.SetTrigger("isAttack");
                 //     // Attack();
                 // }
-                inforNumberPopup.ShowDamage(damage, enemy.transform, damagePopupColor);
+                // inforNumberPopup.ShowDamage(damage, enemy.transform, damagePopupColor);
+                PopupManagement.Instance.ShowDamage(damage, enemy.transform, damagePopupColor);
                 
                 enemy.TakeDamage(damage);
 

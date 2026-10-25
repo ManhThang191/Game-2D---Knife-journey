@@ -367,7 +367,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   player: {fileID: 73275492305663026, guid: 469ad5729e89df543ab87b6654fe1942, type: 3}
-  inforNumberPopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
+  InforPopup: {fileID: 3841266671864108243, guid: a711dd183c1d2024d8af49c0abf8ecfd, type: 3}
   damagePopupColor: {r: 1, g: 1, b: 1, a: 1}
   coinPrefab: {fileID: 1600784228862367284, guid: 4ae7c2d94a7b1ae428cb01a131b1c5e7, type: 3}
   pointSpawnCoin: {fileID: 6325265524150356756}

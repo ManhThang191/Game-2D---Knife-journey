@@ -152,7 +152,7 @@ public abstract class Enemy : MonoBehaviour
             layerMask
         );
 
-        animator.SetBool("isWalk", hit);
+        // animator.SetBool("isWalk", hit);
 
         if (facingLeft && (!hit || hitLeft))
             FlipToRight();
