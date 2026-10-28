@@ -4,6 +4,14 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip attackMissClip;
+    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip hurtClip;
+    [SerializeField] private AudioClip BackgroundMusic;
+
     [Header("Content Popup")]
     [SerializeField] private string insufficientStaminaMessage;
 
@@ -86,6 +94,7 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        AudioManager.Instance?.PlayMusic(BackgroundMusic);
         rb = this.GetComponent<Rigidbody2D>();
         animator = this.GetComponent<Animator>();
 
@@ -141,23 +150,28 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-        
         Collider2D colliInfor =  Physics2D.OverlapCircle(attackPoint.position, attackRadius, attackLayer);
+        
+        if (colliInfor == null)
+        {
+            AudioManager.Instance?.PlaySFX(attackMissClip);
+            return;
+        }
+        
         if (colliInfor)
         {
             Enemy enemy = colliInfor.gameObject.GetComponent<Enemy>();
-            if (enemy == null) return;
+            if (enemy == null) {
+                AudioManager.Instance?.PlaySFX(attackMissClip);                                
+                return;
+            };
 
-            // Vector3 popupPosition = enemy.transform.position + new Vector3(0f, 1f, 0f);
             
             if(colliInfor.gameObject.GetComponent<Enemy>() != null)
             {
-                // if (Input.GetMouseButtonDown(0))
-                // {
-                //     animator.SetTrigger("isAttack");
-                //     // Attack();
-                // }
-                // inforNumberPopup.ShowDamage(damage, enemy.transform, damagePopupColor);
+                
+                AudioManager.Instance?.PlaySFX(attackClip);
+
                 PopupManagement.Instance.ShowDamage(damage, enemy.transform, damagePopupColor);
                 
                 enemy.TakeDamage(damage);
@@ -175,6 +189,7 @@ public class Player : MonoBehaviour
     }
     private void Move()
     {
+        
         movement = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetMouseButtonDown(0) )
@@ -188,14 +203,6 @@ public class Player : MonoBehaviour
             
         }
 
-        // if(movement != 0)
-        // {
-        //     animator.SetBool("isRun", true);
-        // }
-        // else
-        // {
-        //     animator.SetBool("isRun", false);
-        // }
 
         if (movement < 0f && isFacingRight )
         {
@@ -215,7 +222,7 @@ public class Player : MonoBehaviour
             {
                 return;
             }
-
+            AudioManager.Instance?.PlaySFX(jumpClip);
 
             Jump();
             animator.SetBool("isJump", true);

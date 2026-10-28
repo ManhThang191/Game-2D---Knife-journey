@@ -785,6 +785,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 918d64a2b3c2fc24a98ce9d7ab3a4e7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  attackClip: {fileID: 8300000, guid: d8c93ea8d69e40748932ca09b2138b0a, type: 3}
+  attackMissClip: {fileID: 8300000, guid: 92962d120e42b4f4e9e7f8d41bc57362, type: 3}
+  jumpClip: {fileID: 8300000, guid: 71e9f50caa0f6d94e8a3c77dcffc3a27, type: 3}
+  walkClip: {fileID: 8300000, guid: 6f4b7e426063a754cbc2b52207c66310, type: 3}
+  hurtClip: {fileID: 0}
+  BackgroundMusic: {fileID: 8300000, guid: a17015a3204aefa41800414c13f80afb, type: 3}
   insufficientStaminaMessage: "H\u1EBFt Stamina!!!"
   colorStaminaWarm: {r: 1, g: 0, b: 0, a: 0}
   currentHPText: {fileID: 5006584096127478205}

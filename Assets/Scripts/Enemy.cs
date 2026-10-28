@@ -48,6 +48,10 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected GameObject coinPrefab;
     [SerializeField] protected Transform pointSpawnCoin;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip attackMissClip;
+
     protected virtual void Awake()
     {
         if (rb == null)
@@ -171,6 +175,18 @@ public abstract class Enemy : MonoBehaviour
             attackRadius,
             attackLayer
         );
+
+        if (hit == null)
+        {
+            AudioManager.Instance?.PlaySFX(attackMissClip);
+            return;
+        }
+
+        if(hit.gameObject.GetComponent<Player>() != null)
+        {
+            AudioManager.Instance?.PlaySFX(attackClip);
+        };
+        
 
         if (hit == null)
             return;
